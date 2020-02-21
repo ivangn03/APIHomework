@@ -1,39 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using BLL.DTO;
+using BLL.Services;
 
 namespace ApiService.Controllers
 {
-    public class ValuesController : ApiController
+    public class GoodController : ApiController
     {
-        // GET api/values
-        public IEnumerable<string> Get()
+        IService<GoodDTO> service;
+        public GoodController(IService<GoodDTO> service)
         {
-            return new string[] { "value1", "value2" };
+            this.service = service;
+        }
+        // GET api/values
+        public IEnumerable<GoodDTO> Get()
+        {
+            return service.GetAll().ToList();
         }
 
         // GET api/values/5
-        public string Get(int id)
+        public GoodDTO Get(int id)
         {
-            return "value";
+            return service.Get(id);
         }
 
         // POST api/values
-        public void Post([FromBody]string value)
+        public void Post([FromBody]GoodDTO good)
         {
+            service.CreateOrUpdate(good);
         }
 
         // PUT api/values/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]GoodDTO value)
         {
+            GoodDTO goodDTO = value;
+            service.CreateOrUpdate(value);
         }
 
         // DELETE api/values/5
         public void Delete(int id)
         {
+            service.Delete(service.Get(id));
         }
     }
 }
